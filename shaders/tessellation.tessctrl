@@ -1,0 +1,32 @@
+#version 400
+
+layout(vertices = 3) out;
+
+in vec3 vPosition[];
+in vec3 vNormal[];
+in vec2 vTextureCoord[];
+
+out vec3 tcPosition[];
+out vec3 tcNormal[];
+out vec2 tcTextureCoord[];
+
+uniform float TessLevelInner = 3.0; //! slider[1, 3, 20]
+uniform float TessLevelOuter = 2.0; //! slider[1, 2, 20]
+
+void main() {
+	tcPosition[gl_InvocationID] = vPosition[gl_InvocationID];
+	tcNormal[gl_InvocationID] = vNormal[gl_InvocationID];
+	tcTextureCoord[gl_InvocationID] = vTextureCoord[gl_InvocationID];
+	
+	
+	if(gl_InvocationID==0){
+
+		float dist = length(vPosition[0]);
+		float tessLevel = 5/pow(1.2, 0.3*dist);
+		gl_TessLevelOuter[0] = tessLevel;
+		gl_TessLevelOuter[1] = tessLevel;
+		gl_TessLevelOuter[2] = tessLevel;
+		gl_TessLevelInner[0] = tessLevel;
+
+	}
+}
